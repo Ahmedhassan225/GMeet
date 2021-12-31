@@ -1,0 +1,44 @@
+<link href="/docs/5.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">GMeet</a>
+        <ul class="navbar-nav me-auto" *ngIf="loggedIn">
+          <li class="nav-item">
+            <a class="nav-link " href="#">Matches</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Lists</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Messeges</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">About</a>
+          </li>
+        </ul>
+
+        
+        <div class="btn-group" *ngIf="loggedIn" dropdown>
+            <button id="button-basic" dropdownToggle type="button" class="btn btn-primary dropdown-toggle"
+                    aria-controls="dropdown-basic">
+                    Welcome User <span class="caret"></span>
+            </button>
+            <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu"
+                role="menu" aria-labelledby="button-basic">
+              <li role="menuitem"><a class="dropdown-item" href="#">Edit Profile</a></li>
+              <li class="divider dropdown-divider"></li>
+              <li role="menuitem"><a class="dropdown-item" href="#" (click)="logout()">Logout</a>
+              </li>
+            </ul>
+          </div>
+            
+        <form #loginForm="ngForm" *ngIf="!loggedIn" class="d-flex" (ngSubmit)="login()" autocomplete="off">
+          <input class="form-control me-sm-2" name="username" [(ngModel)]="model.username" type="text" placeholder="username">
+          <input class="form-control me-sm-2" name="password" [(ngModel)]="model.password" type="password" placeholder="password">
+          <button class="btn btn-secondary my-2 my-sm-0" type="submit">Login</button>
+        </form>
+      </div>
+  </nav>
+
+  
