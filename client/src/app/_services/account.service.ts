@@ -10,7 +10,7 @@ import { User } from '../_models/user';
 export class AccountService {
 
   baseUrl = "https://localhost:5001/api/"
-  private curentUserSource = new ReplaySubject<User>(1);
+  private curentUserSource = new ReplaySubject<User | null>(1);
   curentUserSource$ = this.curentUserSource.asObservable();
   constructor(private http: HttpClient) { }
 
@@ -43,7 +43,6 @@ export class AccountService {
 
   logout(){
     localStorage.removeItem('user');
-    this.curentUserSource.next(JSON.parse(localStorage.getItem('user') || '{}'));
-    location.reload();
+    this.curentUserSource.next(null);
   }
 }
