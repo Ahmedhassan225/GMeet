@@ -12,7 +12,9 @@ export class AccountService {
   baseUrl = "https://localhost:5001/api/"
   private curentUserSource = new ReplaySubject<User | null>(1);
   curentUserSource$ = this.curentUserSource.asObservable();
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) { 
+    this.curentUserSource.next(null);
+  }
 
   login(model: User) {
     return this.http.post<User>(this.baseUrl + 'account/login', model).pipe(

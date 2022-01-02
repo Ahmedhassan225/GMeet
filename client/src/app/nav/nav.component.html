@@ -3,23 +3,25 @@
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container-fluid">
       <a class="navbar-brand" routerLink="/">GMeet</a>
-        <ul class="navbar-nav me-auto" *ngIf="accountService.curentUserSource$ |async">
-          <li class="nav-item">
-            <a class="nav-link " routerLink="/members" routerLinkActive="active">Matches</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" routerLink="/lists" routerLinkActive="active">Lists</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" routerLink="messages" routerLinkActive="active">Messeges</a>
-          </li>
+        <ul class="navbar-nav me-auto">
+          <ng-container *ngIf="(accountService.curentUserSource$ |async) as user">
+            <li class="nav-item">
+              <a class="nav-link " routerLink="/members" routerLinkActive="active">Matches</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/lists" routerLinkActive="active">Lists</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" routerLink="messages" routerLinkActive="active">Messeges</a>
+            </li>  
+          </ng-container>
         </ul>
 
         
-        <div class="btn-group" *ngIf="accountService.curentUserSource$|async" dropdown>
+        <div class="btn-group" *ngIf="(accountService.curentUserSource$ |async) as user" dropdown>
             <button id="button-basic" dropdownToggle type="button" class="btn btn-primary dropdown-toggle"
                     aria-controls="dropdown-basic">
-                    Welcome User <span class="caret"></span>
+                    Welcome {{user.userName | titlecase}} <span class="caret"></span>
             </button>
             <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu"
                 role="menu" aria-labelledby="button-basic">
