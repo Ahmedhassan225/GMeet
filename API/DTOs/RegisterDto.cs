@@ -11,6 +11,7 @@ namespace API.DTOs
         [Required] //Validation that it is not Null
         public string UserName { get; set; }
         [Required] // we Can add more validation like email or phone or re ...
+        [StringLength(8, MinimumLength =4)]
         public string PassWord { get; set; }
     }
 }
