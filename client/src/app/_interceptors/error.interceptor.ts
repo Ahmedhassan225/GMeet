@@ -21,7 +21,7 @@ export class ErrorInterceptor implements HttpInterceptor {
           switch (error.status){
             case 400:
               if(error.error.errors){
-                const modalStateErrors = [];
+                const modalStateErrors = [] as any;
                 for(const key in error.error.errors){
                   if(error.error.errors[key]){
                     modalStateErrors.push(error.error.errors[key]);
@@ -33,7 +33,7 @@ export class ErrorInterceptor implements HttpInterceptor {
               }
               break;
             case 401:        
-              this.toastr.error(error, error.status);
+              this.toastr.error(error.statusText, error.status);
               break;
             case 404:
               this.router.navigateByUrl('/not-found');
