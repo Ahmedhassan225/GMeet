@@ -1,4 +1,4 @@
-<div class="row">
+<div *ngIf="member" class="row">
     <div class="col-4">
         <div class="card">
             <img src="{{member.photoUrl ||'./assets/not-found-img.jpg'}}" alt="{{member.knownAs}}" 
