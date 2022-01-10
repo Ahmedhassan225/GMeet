@@ -7,6 +7,7 @@ import { take } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
 import { NgForm } from '@angular/forms';
 import { PreventUnsavedChangesGuard } from 'src/app/_guards/prevent-unsaved-changes.guard';
+import { Photo } from 'src/app/_models/photo';
 
 @Component({
   selector: 'app-member-edit',
@@ -47,4 +48,5 @@ export class MemberEditComponent implements OnInit {
       this.editForm.reset(this.member);
     })
   }
+  
 }
