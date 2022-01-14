@@ -1,0 +1,14 @@
+<link rel="stylesheet" href="https://unpkg.com/ngx-bootstrap/datepicker/bs-datepicker.css">
+<div class="mb-3" style=" background-color: #fff;">
+    <input 
+        type="text"
+        [class.is-invalid]='ngControl.touched && ngControl.invalid'
+        class='form-control'
+        [formControl]='ngControl.control'
+        placeholder="{{label}}"
+        bsDatepicker
+        [bsConfig]='bsConfig'
+        [maxDate]='maxDate'
+    >
+    <div *ngIf="$any(ngControl).control.errors?.required" class="invalid-feedback">{{label}} is required</div>
+</div>
