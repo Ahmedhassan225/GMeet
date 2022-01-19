@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+    <StartupObject>API.Program</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>
