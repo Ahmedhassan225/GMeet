@@ -12,7 +12,7 @@ export class AccountService {
 
   baseUrl = environment.apiUrl
   private curentUserSource = new ReplaySubject<User|null>(1);
-  curentUserSource$ = this.curentUserSource.asObservable();
+   curentUserSource$ = this.curentUserSource.asObservable();
   constructor(private http: HttpClient) { 
   }
 

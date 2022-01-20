@@ -1,10 +1,12 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, Observable, of } from 'rxjs';
+import { map, Observable, of, take } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Member } from '../_models/member';
 import { PaginatedResult } from '../_models/pagination';
+import { User } from '../_models/user';
 import { UserParams } from '../_models/userParams';
+import { AccountService } from './account.service';
 
 /* const httpOptions = {
   headers: new HttpHeaders({
@@ -19,18 +21,36 @@ import { UserParams } from '../_models/userParams';
 export class MembersService {
   baseUrl = environment.apiUrl;
   members :Member[] = [];
-  constructor(private http :HttpClient) { }
+  memberCash = new Map();
+  userParams: UserParams;
+  user: User;
 
-  getMembers(UserParams: UserParams){
-    //if(this.getMembers.length > 0)return of(this.members);
-    let params = this.getPaginationHeaders(UserParams.pageNumber, UserParams.pageSize);
+  constructor(private http: HttpClient, private accountService: AccountService) {
+    this.accountService.curentUserSource$.pipe(take(1)).subscribe(user => 
+    {
+        this.user = user as User;
+        this.userParams = new UserParams(user as User);
+    })
+  }
 
-    params = params.append('minAge', UserParams.minAge.toString());
-    params = params.append('maxAge', UserParams.maxAge.toString());
-    params = params.append('gender', UserParams.gender);
-    params = params.append('orderBy', UserParams.orderBy);
+  getMembers(userParams: UserParams){
 
-    return this.getPaginationResult<Member[]>(this.baseUrl + 'users', params);
+    var response = this.memberCash.get(Object.values(userParams).join('-'));
+    
+    if(response) return of(response);
+
+    let params = this.getPaginationHeaders(userParams.pageNumber, userParams.pageSize);
+
+    params = params.append('minAge', userParams.minAge.toString());
+    params = params.append('maxAge', userParams.maxAge.toString());
+    params = params.append('gender', userParams.gender);
+    params = params.append('orderBy', userParams.orderBy);
+
+    return this.getPaginationResult<Member[]>(this.baseUrl + 'users', params)
+      .pipe(map(response => {
+        this.memberCash.set(Object.values(userParams).join('-'), response);
+        return response;
+      }))
   }
 
   private getPaginationResult<T>(url :string, params: HttpParams) {
@@ -58,8 +78,13 @@ export class MembersService {
   }
 
   getMember(username: string){
-    const member = this.members.find(x => x.userName === username);
-    if(member !== undefined) return of(member);
+    const member = [...this.memberCash.values()]
+      .reduce((arr, elem) => arr.concat(elem.result), [])
+      .find((member: Member) => member.userName === username);
+
+    if (member) {
+      return of(member);
+    }
 
     return this.http.get<Member>(this.baseUrl + 'users/'+username);
   }
@@ -79,5 +104,18 @@ export class MembersService {
 
   deletePhoto(photoId: number){
     return this.http.delete(this.baseUrl + 'users/delete-photo/'+ photoId,{});
+  }
+
+  getUserParams(){
+    return this.userParams;
+  }
+
+  setUserParams(params: UserParams){
+    this.userParams = params;
+  }
+
+  resetUserParams(){
+    this.userParams = new UserParams(this.user as any);
+    return this.userParams;
   }
 }
