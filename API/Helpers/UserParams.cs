@@ -5,18 +5,9 @@ using System.Threading.Tasks;
 
 namespace API.Helpers
 {
-    public class UserParams
+    public class UserParams : PaginationParam
     {
-        private const int MaxPageSize = 50;
-        public int PageNumber { get; set; }
-
-        private int _pageSize = 10; //def value
-
-        public int PageSize{
-            get => _pageSize;
-            set => _pageSize = (value > MaxPageSize) ? MaxPageSize : value;
-        }
-
+        
         public string CurrentUsername { get; set; }
         public string Gender { get; set; }
         public int MinAge { get; set; } = 18;
