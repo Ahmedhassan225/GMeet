@@ -11,6 +11,9 @@
             </li>
             <li class="nav-item">
               <a class="nav-link" routerLink="/messages" routerLinkActive="active">Messeges</a>
+            </li> 
+            <li *appHasRole='["Admin","Moderator"]' class="nav-item">
+              <a class="nav-link" routerLink="/admin" routerLinkActive="active">Admin</a>
             </li>  
           </ng-container>
           <li class="nav-item">
@@ -23,7 +26,7 @@
             <img src="{{user.photoUrl || './assets/not-found-img.jpg'}}" alt="{{user.username}}">
             <button id="button-basic" dropdownToggle type="button" class="btn btn-primary dropdown-toggle"
                     aria-controls="dropdown-basic">
-                    Welcome {{user.username | titlecase}} <span class="caret"></span>
+                    Welcome {{user.username || user.userName | titlecase }} <span class="caret"></span>
             </button>
             <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-basic">
               <li role="menuitem"><a class="dropdown-item" routerLink='/member/edit'>Edit Profile</a></li>
