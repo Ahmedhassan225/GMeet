@@ -17,20 +17,12 @@ namespace API.Helpers
             var resultContent = await next();
 
             var username = resultContent.HttpContext.User.GetUserName();
-            var repo  = resultContent.HttpContext.RequestServices.GetService<IUserRepository>();
-            var user = await repo.GetUserByUserNameAsync(username);
-
-            // var identity = new System.Security.Principal.GenericIdentity(user.UserName);
-            // var principal = new GenericPrincipal(identity, new string[0]);
-            // context.HttpContext.User = principal;
-            // System.Threading.Thread.CurrentPrincipal = principal;
-
-            if (!resultContent.HttpContext.User.Identity.IsAuthenticated) return;
-
-            
-            user.LastActive = DateTime.Now;
-
-            await repo.SaveAllAsync();
+            var unitOfWork  = resultContent.HttpContext.RequestServices.GetService<IUnitOfWork>();
+            var user = await unitOfWork.userRepository.GetUserByUserNameAsync(username);
+            if (!resultContent.HttpContext.User.Identity.IsAuthenticated) 
+                return;
+            user.LastActive = DateTime.UtcNow;
+            await unitOfWork.Complete();
         }
     }
 }

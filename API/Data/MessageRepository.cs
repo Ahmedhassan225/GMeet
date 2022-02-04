@@ -80,24 +80,25 @@ namespace API.Data
         public async Task<IEnumerable<MessageDto>> GetMessageThread(string currentUsername, string recipientUsername)
         {
             var messages = await _context.Messages
-                .Include(u => u.Sender).ThenInclude(p => p.Photos)
-                .Include(u => u.Recipient).ThenInclude(p => p.Photos)
-                .Where(m => m.RecipientUserName == currentUsername && m.RecipientDeleted == false
+                .Where(m => m.Recipient.UserName == currentUsername && m.RecipientDeleted == false
                         && m.Sender.UserName == recipientUsername
-                        || m.RecipientUserName == recipientUsername
-                        || m.SenderUserName == currentUsername && m.SenderDeleted == false)
+                        || m.Recipient.UserName == recipientUsername
+                        && m.Sender.UserName == currentUsername && m.SenderDeleted == false
+                )
                 .OrderBy(m => m.MessageSent)
+                .ProjectTo<MessageDto>(_mapper.ConfigurationProvider)
                 .ToListAsync();
 
-            var unreadMessages = messages.Where(m => m.DateRead == null && m.RecipientUserName == currentUsername).ToList();
+            var unreadMessages = messages.Where(m => m.DateRead == null 
+                && m.RecipientUsername == currentUsername).ToList();
 
-            if(unreadMessages.Any()){
-                foreach(var message in unreadMessages){
+            if (unreadMessages.Any())
+            {
+                foreach (var message in unreadMessages)
+                {
                     message.DateRead = DateTime.UtcNow;
                 }
-                await _context.SaveChangesAsync();
             }
-
             return _mapper.Map<IEnumerable<MessageDto>>(messages);
         }
 
